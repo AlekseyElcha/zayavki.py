@@ -1,6 +1,5 @@
 import math
 import telebot
-# import asyncio
 import time
 from time import *
 from telebot import *
@@ -29,7 +28,12 @@ start_date = str(datetime.today())[:10]
 # @bot.message_handler(content_types=["text"])
 # def clear(message):
 #     pass
-
+@bot.message_handler(commands=['answer'])
+def send_answer(message):
+    command = message.text.split(' ', 2)
+    user_id = command[1]
+    answer_text = command[2]
+    bot.send_message(chat_id=user_id, text=answer_text)
 
 @bot.message_handler(commands=["check"])
 def check_status(message):
@@ -55,7 +59,7 @@ def start(m, res=False):
 @bot.message_handler(commands=["admin_commands"])
 def admin_commands(message):
     bot.send_message(message.chat.id, 'Админские команды:' + '\n' + '/check - проверка статуса бота' +
-                     '\n' + '/admin - число запусков бота')
+                     '\n' + '/admin - число запусков бота' + '\n' + '/answer [id] [текст сообщения] - ответить пользователю по id от имени бота')
 
 @bot.message_handler(commands=["admin"])
 def admin(message):
@@ -234,3 +238,5 @@ def renew(message):
     start(message)
 
 bot.polling(none_stop=True, interval=0)
+
+
