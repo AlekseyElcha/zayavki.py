@@ -4,9 +4,12 @@ import time
 from time import *
 from telebot import *
 from datetime import *
+import os
+from sys import *
 bot = TeleBot('6417715356:AAE3fSAIO_M6_TN8lX2kYb1V6DXDCw_z1Dk')
 print('Started')
 users_adm = set()
+admins = [5696529637]
 group_id = -1002119559432
 # bot.send_message(group_id, 'Бот запущен, проверить /check')
 client_name = contacts = client_adress = date_time_problem = client_problem = ''
@@ -22,18 +25,28 @@ start_date = str(datetime.today())[:10]
 # def delete_all_messages(bot, chat_id):
 #     bot.purge_chat(bot, chat_id)
 
-
-
+@bot.message_handler(commands=["stop"])
+def full_stop(message):
+    global admins
+    if message.from_user.id not in admins:
+        bot.send_message(message.chat.id, 'Доступно только администраторам.')
+    else:
+        bot.send_message(message.chat.id, 'Соединение закрыто.')
+        os.abort()
 #
 # @bot.message_handler(content_types=["text"])
 # def clear(message):
 #     pass
 @bot.message_handler(commands=['answer'])
 def send_answer(message):
-    command = message.text.split(' ', 2)
-    user_id = command[1]
-    answer_text = command[2]
-    bot.send_message(chat_id=user_id, text=answer_text)
+    global admins
+    if message.from_user.id not in admins:
+        bot.send_message(message.chat.id, 'Эта функция доступна только администраторам.')
+    else:
+        command = message.text.split(' ', 2)
+        user_id = command[1]
+        answer_text = command[2]
+        bot.send_message(chat_id=user_id, text=answer_text)
 
 @bot.message_handler(commands=["check"])
 def check_status(message):
@@ -56,15 +69,13 @@ def start(m, res=False):
     users_adm.add(m.from_user.id)
 
 
-@bot.message_handler(commands=["admin_commands"])
-def admin_commands(message):
-    bot.send_message(message.chat.id, 'Админские команды:' + '\n' + '/check - проверка статуса бота' +
-                     '\n' + '/admin - число запусков бота' + '\n' + '/answer [id] [текст сообщения] - ответить пользователю по id от имени бота')
-
 @bot.message_handler(commands=["admin"])
 def admin(message):
-    global start_calls, start_time, start_date
-    bot.send_message(message.chat.id, 'Дата и время запуска бота: ' + start_time + ' ' + 'МСК ' + start_date + '\n' + 'Запусков через /start: ' + str(start_calls)
+    global start_calls, start_time, start_date, admins
+    if message.from_user.id not in admins:
+        bot.send_message(message.chat.id, 'Доступно только администраторам.')
+    else:
+        bot.send_message(message.chat.id, 'Дата и время запуска бота: ' + start_time + ' ' + 'МСК ' + start_date + '\n' + 'Запусков через /start: ' + str(start_calls)
     + '\n' + 'Список пользователей: ' + str(users_adm))
 
 @bot.message_handler(commands=["check"])
@@ -237,6 +248,16 @@ def renew(message):
     # bot.send_message(message.chat.id, 'Новая заявка.')
     start(message)
 
+@bot.message_handler(commands=["stop"])
+def full_stop(message):
+    global admins, is_running
+    if message.from_user.id not in admins:
+        bot.send_message(message.chat.id, 'Доступно только администраторам.')
+    else:
+        bot.send_message(message.chat.id, 'Остановка бота через 5 секунд!')
+        is_running = False
+
 bot.polling(none_stop=True, interval=0)
+
 
 
