@@ -9,7 +9,14 @@ from sys import *
 bot = TeleBot('6417715356:AAE3fSAIO_M6_TN8lX2kYb1V6DXDCw_z1Dk')
 print('Started')
 users_adm = set()
-admins = [5696529637]
+
+
+file_admins = open('/home/aleshus2007/admins.txt')
+admins = [int(i) for i in file_admins]
+print(admins)
+
+
+
 group_id = -1002119559432
 # bot.send_message(group_id, 'Бот запущен, проверить /check')
 client_name = contacts = client_adress = date_time_problem = client_problem = ''
@@ -21,15 +28,12 @@ start_time[0] += 3
 start_time = ':'.join([str(i) for i in start_time])
 start_date = str(datetime.today())[:10]
 
-# @bot.message_handler(commands=["clear"])
-# def delete_all_messages(bot, chat_id):
-#     bot.purge_chat(bot, chat_id)
 
 @bot.message_handler(commands=["stop"])
 def full_stop(message):
     global admins
     if message.from_user.id not in admins:
-        bot.send_message(message.chat.id, 'Доступно только администраторам.')
+        bot.send_message(message.chat.id, 'Данная функция доступна только администраторам.')
     else:
         bot.send_message(message.chat.id, 'Соединение закрыто.')
         os.abort()
@@ -41,7 +45,7 @@ def full_stop(message):
 def send_answer(message):
     global admins
     if message.from_user.id not in admins:
-        bot.send_message(message.chat.id, 'Эта функция доступна только администраторам.')
+        bot.send_message(message.chat.id, 'Данная функция доступна только администраторам.')
     else:
         command = message.text.split(' ', 2)
         user_id = command[1]
@@ -60,10 +64,6 @@ def start(m, res=False):
                      + '\n' + 'Домашний и подъездный домофон, квартирные переговорные устройства' + '\n' +
     'Видеонаблюдение, шлагбаумы, калитки.' + '\n' + 'Доступна новая функция - Бесключевое открытие домофона' + '\n' +
                      'Инструкция для пользователей: https://smartsputnik.notion.site/5daae8df993248a78847d5203f4b5112')
-    # doc1 = open('/home/aleshus2007/page1.jpg')
-    # doc2 = open('/home/aleshus2007/page2.jpg')
-    # doc3 = open('/home/aleshus2007/page3.jpg')
-    # bot.send_message(m.chat.id, doc1)
     site(m)
     start_calls += 1
     users_adm.add(m.from_user.id)
@@ -73,7 +73,7 @@ def start(m, res=False):
 def admin(message):
     global start_calls, start_time, start_date, admins
     if message.from_user.id not in admins:
-        bot.send_message(message.chat.id, 'Доступно только администраторам.')
+        bot.send_message(message.chat.id, 'Данная функция доступна только администраторам.')
     else:
         bot.send_message(message.chat.id, 'Дата и время запуска бота: ' + start_time + ' ' + 'МСК ' + start_date + '\n' + 'Запусков через /start: ' + str(start_calls)
     + '\n' + 'Список пользователей: ' + str(users_adm))
@@ -248,16 +248,7 @@ def renew(message):
     # bot.send_message(message.chat.id, 'Новая заявка.')
     start(message)
 
-@bot.message_handler(commands=["stop"])
-def full_stop(message):
-    global admins, is_running
-    if message.from_user.id not in admins:
-        bot.send_message(message.chat.id, 'Доступно только администраторам.')
-    else:
-        bot.send_message(message.chat.id, 'Остановка бота через 5 секунд!')
-        is_running = False
 
 bot.polling(none_stop=True, interval=0)
-
 
 
