@@ -11,7 +11,7 @@ print('Started')
 users_adm = set()
 
 
-file_admins = open('/home/aleshus2007/admins.txt')
+file_admins = open('/zayavki.py/admins')
 admins = [int(i) for i in file_admins]
 print(admins)
 
