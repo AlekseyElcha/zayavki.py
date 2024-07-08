@@ -11,7 +11,7 @@ print('Started')
 users_adm = set()
 
 
-file_admins = open('/zayavki.py/admins')
+file_admins = open('/home/aleshus2007/admins.txt')
 admins = [int(i) for i in file_admins]
 print(admins)
 
@@ -194,19 +194,18 @@ def get_message2(message):
 
 @bot.message_handler(content_types=["text"])
 def send_q(message):
-    bot.send_message(message.chat.id,
+    bot.send_message(message.chat.id, '*Текст Вашего обращения, которое будет отправлено в компанию:* ' + '\n' +
     '*ФИО: *' + ' '.join([i.split('#')[0] for i in answers if str(message.from_user.id) in i and 'na' in i.split('#')]) + '\n' +
     '*Контактная информация: *' + ' '.join([i.split('#')[0] for i in answers if str(message.from_user.id) in i and 'co' in i.split('#')]) + '\n' +
     '*Адрес: *' + ' '.join([i.split('#')[0] for i in answers if str(message.from_user.id) in i and 'ad' in i.split('#')]) + '\n' +
-    '*Вопрос: *' + ' '.join([i.split('#')[0] for i in answers if str(message.from_user.id) in i and 'qu' in i.split('#')]) + '\n' +
-    '*Подтвердить отправку обращения?*', parse_mode='Markdown')
+    '*Вопрос: *' + ' '.join([i.split('#')[0] for i in answers if str(message.from_user.id) in i and 'qu' in i.split('#')]) + '\n', parse_mode='Markdown')
 
     bot.register_next_step_handler(message, send_qq)
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
     btn1 = types.KeyboardButton("Да")
     btn2 = types.KeyboardButton("Нет, полностью удалить форму.")
     markup.add(btn1, btn2)
-    bot.send_message(message.chat.id, 'Подтвердить отправку обращения?', reply_markup=markup)
+    bot.send_message(message.chat.id, '*Подтвердить отправку обращения?*', reply_markup=markup, parse_mode='Markdown')
 @bot.message_handler(content_types=["text"])
 def send_qq(message):
 
@@ -239,16 +238,12 @@ def create_text(message):
     answers = [i for i in answers if str(user_id) not in i]
     print(x)
     print(message.from_user.username)
-    bot.send_message(message.chat.id, 'Ваша заявка принята!')
+    bot.send_message(message.chat.id, '*Ваша заявка отправлена!*', parse_mode='Markdown')
     renew(message)
 
 
 @bot.message_handler(content_types=["text"])
 def renew(message):
-    # bot.send_message(message.chat.id, 'Новая заявка.')
-    start(message)
-
+    bot.send_message(message.chat.id, 'Для создания нового обращения нажмите /start ')
 
 bot.polling(none_stop=True, interval=0)
-
-
