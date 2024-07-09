@@ -145,7 +145,7 @@ def get_adress2_get_date_time_problem1(message):
         get_name1(message)
     else:
         answers.append(message.text + '#' + str(message.from_user.id) + '#' + 'ad')
-        bot.send_message(message.chat.id, 'Опишите подробно, пожалуйста, возникший вопрос', reply_markup=markup)
+        bot.send_message(message.chat.id, 'Опишите подробно, пожалуйста, возникший вопрос.', reply_markup=markup)
         # bot.register_next_step_handler(message, get_date_time_problem2_get_message1)
         bot.register_next_step_handler(message, get_message2)
 
@@ -158,7 +158,7 @@ def site(message):
     markup = types.InlineKeyboardMarkup()
     button1 = types.InlineKeyboardButton("Перейти на сайт", url='https://alekseyelcha.github.io')
     markup.add(button1)
-    bot.send_message(message.chat.id, "Наш сайт", reply_markup=markup)
+    bot.send_message(message.chat.id, "*НАШ ВЕБ-САЙТ*", reply_markup=markup, parse_mode='Markdown')
     get_name1(message)
 
 # @bot.message_handler(content_types=["text"])
@@ -212,7 +212,7 @@ def send_qq(message):
     if message.text == 'Да':
         create_text(message)
     else:
-        bot.send_message(message.chat.id, 'Ваше обращение полностью очищено')
+        bot.send_message(message.chat.id, 'Ваше обращение полностью очищено!')
         renew(message)
 
 
@@ -239,8 +239,13 @@ def create_text(message):
     print(x)
     print(message.from_user.username)
     bot.send_message(message.chat.id, '*Ваша заявка отправлена!*', parse_mode='Markdown')
+    clear(message)
     renew(message)
 
+@bot.message_handler(content_types=['text'])
+def clear(message):
+    for index in range(10):
+        bot.delete_message(chat_id=message.chat.id, message_id=message.message_id-index)
 
 @bot.message_handler(content_types=["text"])
 def renew(message):
