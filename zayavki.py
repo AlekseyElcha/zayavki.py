@@ -219,7 +219,7 @@ def send_qq(message):
 @bot.message_handler(content_types=["text"])
 def create_text(message):
     global client_name, contacts, client_adress, date_time_problem, client_problem, final_message_to_send, x, answers
-    time = [int(i) for i in str(datetime.today())[11:-11].split(':')]
+    time = [int(i) for i in str(datetime.today())[11:-10].split(':')]
     time[0] += 3
     time = (':'.join([str(i) for i in time]))
     date = str(datetime.today())
