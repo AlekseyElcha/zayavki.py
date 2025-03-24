@@ -292,4 +292,5 @@ def renew(message):
     bot.send_message(message.chat.id, 'Для создания нового обращения нажмите /start ')
 
 # bot.polling(none_stop=True, interval=0)
-bot.infinity_polling(none_stop=True, timeout=240)
+if __name__ == "__main__":
+    bot.infinity_polling(none_stop=True, timeout=240)
