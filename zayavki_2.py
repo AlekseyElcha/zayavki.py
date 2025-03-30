@@ -6,19 +6,23 @@ from telebot import *
 from datetime import *
 import os
 from sys import *
-from aiogram.client.session.aiohttp import AiohttpSession
-apihelper.proxy = {'http':'http://10.10.1.10:3128'}
 bot = TeleBot('6417715356:AAE3fSAIO_M6_TN8lX2kYb1V6DXDCw_z1Dk')
 # bot = TeleBot('7355802592:AAHQwrC1DoNHEOj93jQngTuX1MoWp_kSwWs')  #TestVersion
 print('Started')
 users_adm = set()
+# ВЕРСИЯ 1.1
 
-
-# file_admins = open('C:/Users/Mikhail/Desktop/Telebot/admins.txt')
-# admins = [int(i) for i in file_admins]
+file_admins = open('/home/aleshus2007/admins.txt')
+admins = [int(i) for i in file_admins]
 print(admins)
 
-
+symbols = ['_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!', '₽', '$', '#', '%']
+def replace_decode(s):
+    t = [i for i in s]
+    for i in t:
+        if i in symbols:
+            i.replace(i, '-')
+    return ''.join(s)
 group_id = -1002119559432
 # bot.send_message(group_id, 'Бот запущен, проверить /check')
 client_name = contacts = client_adress = date_time_problem = client_problem = ''
@@ -57,7 +61,7 @@ def send_answer(message):
 
 @bot.message_handler(commands=["check"])
 def check_status(message):
-    bot.send_message(message.chat.id, 'В сети (ФЕРМА)')
+    bot.send_message(message.chat.id, 'В сети (PythonAnywhere)')
 
 @bot.message_handler(commands=["start"])
 def start(m, res=False):
@@ -186,7 +190,7 @@ def get_problem(message):
         bot.send_message(message.chat.id, 'Новая заявка.')
         get_name1(message)
     else:
-        answers.append(message.text.replace('_', '-') + '#' + str(message.from_user.id) + '#' + 'qu')
+        answers.append(replace_decode(message.text) + '#' + str(message.from_user.id) + '#' + 'qu')
         get_message2(message)
 
 
@@ -292,7 +296,7 @@ def clear(message):
 @bot.message_handler(content_types=["text"])
 def renew(message):
     bot.send_message(message.chat.id, 'Для создания нового обращения нажмите /start ')
-
-# bot.polling(none_stop=True, interval=0)
-bot.infinity_polling(none_stop=True, timeout=240)
+if __name__ == "__main__":
+    bot.infinity_polling(none_stop=True, timeout=2440)
+# bot.infinity_polling(none_stop=True, timeout=240)
 
