@@ -10,13 +10,23 @@ bot = TeleBot('6417715356:AAE3fSAIO_M6_TN8lX2kYb1V6DXDCw_z1Dk')
 # bot = TeleBot('7355802592:AAHQwrC1DoNHEOj93jQngTuX1MoWp_kSwWs')  #TestVersion
 print('Started')
 users_adm = set()
-
+# ВЕРСИЯ 1.1
 
 file_admins = open('/home/aleshus2007/admins.txt')
 admins = [int(i) for i in file_admins]
 print(admins)
 
-
+symbols = ['_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!', '₽', '$', '#', '%']
+def replace_decode(s):
+    try:
+        t = [i for i in s]
+        for i in t:
+            if i in symbols:
+                i = i.replace(i, '-')
+        return ''.join(t)
+    except:
+        x = 'Неподдерживаемый символ'
+        return x
 group_id = -1002119559432
 # bot.send_message(group_id, 'Бот запущен, проверить /check')
 client_name = contacts = client_adress = date_time_problem = client_problem = ''
@@ -109,7 +119,7 @@ def get_name2_get_contacts1(message):
     elif message.text == '/admin_commands':
         admin_commands(message)
     else:
-        answers.append(message.text + '#' + str(message.from_user.id) + '#' + 'na')
+        answers.append(replace_decode(message.text) + '#' + str(message.from_user.id) + '#' + 'na')
 
         bot.send_message(message.chat.id, 'Предоставьте, пожалуйста, вашу контактную информацию (телефон/эл.почта). '
                                           'В случае её недостоверности обратная связь исключена.', reply_markup=markup)
@@ -129,7 +139,7 @@ def get_contacts2_get_adress1(message):
         bot.send_message(message.chat.id, 'Новая заявка')
         get_name1(message)
     else:
-        answers.append(message.text + '#' + str(message.from_user.id) + '#' + 'co')
+        answers.append(replace_decode(message.text) + '#' + str(message.from_user.id) + '#' + 'co')
         bot.send_message(message.chat.id, 'Какой Ваш адрес? Укажите улицу, номер дома и подъезд.', reply_markup=markup)
         bot.register_next_step_handler(message, get_adress2_get_date_time_problem1)
 
@@ -146,7 +156,7 @@ def get_adress2_get_date_time_problem1(message):
         bot.send_message(message.chat.id, 'Новая заявка.')
         get_name1(message)
     else:
-        answers.append(message.text + '#' + str(message.from_user.id) + '#' + 'ad')
+        answers.append(replace_decode(message.text) + '#' + str(message.from_user.id) + '#' + 'ad')
         bot.send_message(message.chat.id, 'Пожалуйста, укажите номер квартиры, это очень важно для нас.')
         bot.register_next_step_handler(message, get_flat)
         # flat = message.from_user.text
@@ -168,7 +178,7 @@ def get_flat(message):
         bot.send_message(message.chat.id, 'Новая заявка.')
         get_name1(message)
     else:
-        answers.append(message.text + '#' + str(message.from_user.id) + '#' + 'fl')
+        answers.append(replace_decode(message.text) + '#' + str(message.from_user.id) + '#' + 'fl')
         bot.send_message(message.chat.id, 'Опишите подробно, пожалуйста, возникший вопрос.', reply_markup=markup)
         x = message.from_user.id
         bot.register_next_step_handler(message, get_problem)
@@ -184,7 +194,7 @@ def get_problem(message):
         bot.send_message(message.chat.id, 'Новая заявка.')
         get_name1(message)
     else:
-        answers.append(message.text + '#' + str(message.from_user.id) + '#' + 'qu')
+        answers.append(replace_decode(message.text) + '#' + str(message.from_user.id) + '#' + 'qu')
         get_message2(message)
 
 
@@ -207,7 +217,7 @@ def site(message):
     button_wa = types.InlineKeyboardButton("*Открыть в ТГ*", web_app=web_info, parse_mode='Markdown')
     button_web = types.InlineKeyboardButton("Открыть в Браузере", url='https://alekseyelcha.github.io')
     markup.add(button_wa, button_web)
-    bot.send_message(message.chat.id, "*Наш сайт:*",
+    bot.send_message(message.chat.id, "На сайте теперь можно отправить обращение через Google Forms (Гугл Формы)!" + '\n' + "*Наш сайт:*",
                          reply_markup=markup, parse_mode='Markdown')
     get_name1(message)
 
@@ -290,7 +300,6 @@ def clear(message):
 @bot.message_handler(content_types=["text"])
 def renew(message):
     bot.send_message(message.chat.id, 'Для создания нового обращения нажмите /start ')
-
-# bot.polling(none_stop=True, interval=0)
 if __name__ == "__main__":
-    bot.infinity_polling(none_stop=True, timeout=240)
+    bot.infinity_polling(none_stop=True, timeout=2440)
+# bot.infinity_polling(none_stop=True, timeout=240)
