@@ -1,5 +1,12 @@
 from telebot import *
-
+import math
+import telebot
+import time
+from time import *
+from telebot import *
+from datetime import *
+import os
+from sys import *
 bot = TeleBot('7355802592:AAHQwrC1DoNHEOj93jQngTuX1MoWp_kSwWs') # TG TEST VERSION
 # bot = TeleBot('6417715356:AAE3fSAIO_M6_TN8lX2kYb1V6DXDCw_z1Dk') # TG MAIN VERSION
 file_admins = open('/home/aleshus2007eu/admins.txt')
