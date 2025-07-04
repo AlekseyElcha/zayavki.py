@@ -18,11 +18,15 @@ print(admins)
 
 symbols = ['_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!', '₽', '$', '#', '%']
 def replace_decode(s):
-    t = [i for i in s]
-    for i in t:
-        if i in symbols:
-            i.replace(i, '-')
-    return ''.join(s)
+    try:
+        t = [i for i in s]
+        for i in t:
+            if i in symbols:
+                i = i.replace(i, '-')
+        return ''.join(t)
+    except:
+        x = 'Неподдерживаемый символ'
+        return x
 group_id = -1002119559432
 # bot.send_message(group_id, 'Бот запущен, проверить /check')
 client_name = contacts = client_adress = date_time_problem = client_problem = ''
@@ -115,7 +119,7 @@ def get_name2_get_contacts1(message):
     elif message.text == '/admin_commands':
         admin_commands(message)
     else:
-        answers.append(message.text + '#' + str(message.from_user.id) + '#' + 'na')
+        answers.append(replace_decode(message.text) + '#' + str(message.from_user.id) + '#' + 'na')
 
         bot.send_message(message.chat.id, 'Предоставьте, пожалуйста, вашу контактную информацию (телефон/эл.почта). '
                                           'В случае её недостоверности обратная связь исключена.', reply_markup=markup)
@@ -135,7 +139,7 @@ def get_contacts2_get_adress1(message):
         bot.send_message(message.chat.id, 'Новая заявка')
         get_name1(message)
     else:
-        answers.append(message.text + '#' + str(message.from_user.id) + '#' + 'co')
+        answers.append(replace_decode(message.text) + '#' + str(message.from_user.id) + '#' + 'co')
         bot.send_message(message.chat.id, 'Какой Ваш адрес? Укажите улицу, номер дома и подъезд.', reply_markup=markup)
         bot.register_next_step_handler(message, get_adress2_get_date_time_problem1)
 
@@ -152,7 +156,7 @@ def get_adress2_get_date_time_problem1(message):
         bot.send_message(message.chat.id, 'Новая заявка.')
         get_name1(message)
     else:
-        answers.append(message.text + '#' + str(message.from_user.id) + '#' + 'ad')
+        answers.append(replace_decode(message.text) + '#' + str(message.from_user.id) + '#' + 'ad')
         bot.send_message(message.chat.id, 'Пожалуйста, укажите номер квартиры, это очень важно для нас.')
         bot.register_next_step_handler(message, get_flat)
         # flat = message.from_user.text
@@ -174,7 +178,7 @@ def get_flat(message):
         bot.send_message(message.chat.id, 'Новая заявка.')
         get_name1(message)
     else:
-        answers.append(message.text + '#' + str(message.from_user.id) + '#' + 'fl')
+        answers.append(replace_decode(message.text) + '#' + str(message.from_user.id) + '#' + 'fl')
         bot.send_message(message.chat.id, 'Опишите подробно, пожалуйста, возникший вопрос.', reply_markup=markup)
         x = message.from_user.id
         bot.register_next_step_handler(message, get_problem)
