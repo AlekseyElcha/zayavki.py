@@ -1,17 +1,12 @@
 from telebot import *
-import math
-import telebot
-import time
-from time import *
-from telebot import *
-from datetime import *
-import os
-from sys import *
-bot = TeleBot('7355802592:AAHQwrC1DoNHEOj93jQngTuX1MoWp_kSwWs')
-file_admins = [1]
+
+bot = TeleBot('7355802592:AAHQwrC1DoNHEOj93jQngTuX1MoWp_kSwWs') # TG TEST VERSION
+# bot = TeleBot('6417715356:AAE3fSAIO_M6_TN8lX2kYb1V6DXDCw_z1Dk') # TG MAIN VERSION
+file_admins = open('/home/aleshus2007eu/admins.txt')
+file_blocked_users = open('/home/aleshus2007eu/blocked_users.txt')
 admins = [int(i) for i in file_admins]
 print(admins)
-blocked_users = []
+blocked_users = [i for i in file_blocked_users]
 count_users = 0
 CLIENT_DATA = []
 symbols = ['_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!', '₽', '$', '#', '%']
