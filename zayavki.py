@@ -5,16 +5,17 @@ from time import *
 from datetime import *
 import os
 from sys import *
-bot = TeleBot('7355802592:AAHQwrC1DoNHEOj93jQngTuX1MoWp_kSwWs') # TG TEST VERSION
-# bot = TeleBot('6417715356:AAE3fSAIO_M6_TN8lX2kYb1V6DXDCw_z1Dk') # TG MAIN VERSION
-file_admins = [1]
+# bot = TeleBot('7355802592:AAHQwrC1DoNHEOj93jQngTuX1MoWp_kSwWs') # TG TEST VERSION
+bot = TeleBot('6417715356:AAE3fSAIO_M6_TN8lX2kYb1V6DXDCw_z1Dk') # TG MAIN VERSION
+print('Started')
+file_admins = open('/home/aleshus2007eu/admins.txt')
 admins = [int(i) for i in file_admins]
 print(admins)
 blocked_users = []
 count_users = 0
 CLIENT_DATA = []
-group_id = -4253143897  # TEST GROUP
-# group_id = -1002119559432  # MAIN GROUP
+#group_id = -4253143897  # TEST GROUP
+group_id = -1002119559432  # MAIN GROUP
 symbols = ['_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!', '₽', '$', '#', '%']
 def replace_decode(s):
     try:
@@ -65,6 +66,18 @@ def site(message):
 #     markup.add(btn1)
 #     bot.send_message(message.chat.id, 'ОТКРЫТЬ САЙТ', reply_markup=markup)
 #     redirect(message)
+@bot.message_handler(commands=['answer'])
+def send_answer(message):
+    global admins
+    if message.from_user.id not in admins:
+        bot.send_message(message.chat.id, 'Эта функция доступна только администраторам.')
+        bot.send_message(message.chat.id, 'Данная функция доступна только администраторам.')
+    else:
+        command = message.text.split(' ', 2)
+        user_id = command[1]
+        answer_text = command[2]
+        bot.send_message(chat_id=user_id, text=answer_text)
+
 
 @bot.message_handler(content_types=["text"])
 def questions_tg_bot1(message):
