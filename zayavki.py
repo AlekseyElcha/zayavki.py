@@ -27,6 +27,18 @@ def replace_decode(s):
     except:
         x = 'Неподдерживаемый символ'
         return x
+        
+@bot.message_handler(commands=['answer'])
+def send_answer(message):
+    global admins
+    if message.from_user.id not in admins:
+        bot.send_message(message.chat.id, 'Данная функция доступна только администраторам.')
+    else:
+        command = message.text.split(' ', 2)
+        user_id = command[1]
+        answer_text = command[2]
+        bot.send_message(chat_id=user_id, text=answer_text)
+        bot.send_message(message.chat.id, 'Ответ отправлен!')
 
 @bot.message_handler(commands=["admin"])
 def admin(message):
@@ -66,18 +78,6 @@ def site(message):
 #     markup.add(btn1)
 #     bot.send_message(message.chat.id, 'ОТКРЫТЬ САЙТ', reply_markup=markup)
 #     redirect(message)
-@bot.message_handler(commands=['answer'])
-def send_answer(message):
-    global admins
-    if message.from_user.id not in admins:
-        bot.send_message(message.chat.id, 'Эта функция доступна только администраторам.')
-        bot.send_message(message.chat.id, 'Данная функция доступна только администраторам.')
-    else:
-        command = message.text.split(' ', 2)
-        user_id = command[1]
-        answer_text = command[2]
-        bot.send_message(chat_id=user_id, text=answer_text)
-
 
 @bot.message_handler(content_types=["text"])
 def questions_tg_bot1(message):
