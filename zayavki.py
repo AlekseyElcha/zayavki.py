@@ -27,7 +27,7 @@ def replace_decode(s):
     except:
         x = 'Неподдерживаемый символ'
         return x
-        
+
 @bot.message_handler(commands=['answer'])
 def send_answer(message):
     global admins
@@ -55,11 +55,11 @@ def check_status(message):
 @bot.message_handler(content_types=["text"])
 def site(message):
     markup = types.InlineKeyboardMarkup()
-    web_info = types.WebAppInfo('https://alekseyelcha.github.io')
+    web_info = types.WebAppInfo('https://domofon-servis-odi.ru')
     button_wa = types.InlineKeyboardButton("Открыть здесь", web_app=web_info)
-    button_web = types.InlineKeyboardButton("Открыть в Браузере", url='https://alekseyelcha.github.io')
+    button_web = types.InlineKeyboardButton("Открыть в Браузере", url='https://domofon-servis-odi.ru')
     markup.add(button_wa, button_web)
-    bot.send_message(message.chat.id, 'Где открыть наш сайт? https://alekseyelcha.github.io', reply_markup=markup)
+    bot.send_message(message.chat.id, 'Где открыть наш обновлённый сайт? https://domofon-servis-odi.ru', reply_markup=markup)
     markup = types.ReplyKeyboardMarkup(resize_keyboard=False)
     btn1 = types.KeyboardButton("Наш веб-сайт")
     btn2 = types.KeyboardButton("Оплата/погашение задолжности")
@@ -231,7 +231,7 @@ def get_flat(message):
         redirect(message)
     else:
         CLIENT_DATA.append(replace_decode(message.text) + '#' + str(message.from_user.id) + '#' + 'fl')
-        bot.send_message(message.chat.id, 'пожалуйста, подробно опишите Ваш вопрос.', reply_markup=markup)
+        bot.send_message(message.chat.id, 'Пожалуйста, подробно опишите Ваш вопрос.', reply_markup=markup)
         us_id = message.from_user.id
         bot.register_next_step_handler(message, get_problem)
 
