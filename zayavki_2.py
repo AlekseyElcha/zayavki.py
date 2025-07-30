@@ -1,5 +1,4 @@
 import datetime
-
 from telebot import *
 import math
 import time
@@ -10,14 +9,12 @@ from sys import *
 from telebot.types import InlineKeyboardMarkup
 bot = TeleBot('7355802592:AAHQwrC1DoNHEOj93jQngTuX1MoWp_kSwWs') # TG TEST VERSION
 # bot = TeleBot('6417715356:AAE3fSAIO_M6_TN8lX2kYb1V6DXDCw_z1Dk') # TG MAIN VERSION
-file_admins = open('C:/Users/alesh/OneDrive/Desktop/admins.txt')
-file_banned = open('C:/Users/alesh/OneDrive/Desktop/banned.txt')
-file_counter = open('C:/Users/alesh/OneDrive/Desktop/counter.txt')
+file_admins = open('/home/aleshus2007eu/admins.txt')
 admins = [int(i) for i in file_admins]
-banned = [int(i) for i in file_banned]
-counter = int(file_counter.readline())
 count_users = 0
 CLIENT_DATA = []
+RESERVE = []
+pressed_buttons = set()
 group_id = -4253143897  # TEST GROUP
 # group_id = -1002119559432  # MAIN GROUP
 start_time_data = (str(datetime.today())[:-7] + ' UTC')
@@ -39,14 +36,12 @@ def send_answer(message):
     global admins
     if message.from_user.id not in admins:
         bot.send_message(message.chat.id, 'Данная функция доступна только администраторам.')
-        return
     else:
         command = message.text.split(' ', 2)
         user_id = command[1]
         answer_text = command[2]
         bot.send_message(chat_id=user_id, text=answer_text)
         bot.send_message(message.chat.id, 'Ответ отправлен!')
-        return
 
 
 @bot.message_handler(commands=["admin"])
@@ -54,15 +49,12 @@ def admin(message):
     global start_calls, start_time, start_date, admins
     if message.from_user.id not in admins:
         bot.send_message(message.chat.id, 'Данная функция доступна только администраторам.')
-        return
     else:
         bot.send_message(message.chat.id, 'Дата и время запуска бота: ' + start_time + ' ' + 'МСК ' + start_date + '\n' + 'Пользователей: ' + str(count_users))
-        return
 
 @bot.message_handler(commands=["check"])
 def check_status(message):
     bot.send_message(message.chat.id, 'В сети (PythonAnywhere)')
-    return
 
 @bot.message_handler(content_types=["text"])
 def site(message):
@@ -72,17 +64,8 @@ def site(message):
     button_web = types.InlineKeyboardButton("Открыть в Браузере", url='https://domofon-servis-odi.ru')
     markup.add(button_wa, button_web)
     bot.send_message(message.chat.id, 'Где открыть наш обновлённый сайт? https://domofon-servis-odi.ru', reply_markup=markup)
-    markup = types.ReplyKeyboardMarkup(resize_keyboard=False)
-    btn1 = types.KeyboardButton("Наш веб-сайт")
-    btn2 = types.KeyboardButton("Оплата/погашение задолжности")
-    btn3 = types.KeyboardButton("Вопрос технического или иного характера")
-    btn4 = types.KeyboardButton("Вопросы/предложения по работе этого Телеграм-бота")
-    markup.add(btn1)
-    markup.add(btn2)
-    markup.add(btn3)
-    markup.add(btn4)
     redirect(message)
-    return
+
 
 # @bot.message_handler(content_types=["text"])
 # def site(message):
@@ -100,7 +83,6 @@ def questions_tg_bot1(message):
     markup.add(btn1)
     bot.send_message(message.chat.id, 'Оставьте здесь своё сообщение разработчику или вернитесь по кнопке "Назад"', reply_markup=markup)
     bot.register_next_step_handler(message, questions_tg_bot2)
-    return
 
 
 @bot.message_handler(content_types=["text"])
@@ -109,13 +91,11 @@ def questions_tg_bot2(message):
     msg1 = message.text
     if msg1 == 'Назад':
         redirect(message)
-        return
     else:
         msg = 'Сообщение: ' + msg1
         bot.send_message(group_id, 'ID пользователя: ' + str(message.from_user.id) + '\n' + msg)
         bot.send_message(message.chat.id, 'Сообщение отправлено!', reply_markup=types.ReplyKeyboardRemove())
         redirect(message)
-        return
 
 @bot.message_handler(commands=['start'])
 def start(m, res=False):
@@ -138,7 +118,6 @@ def start(m, res=False):
                                                    '"квадратик с кнопками" в строке набора текста', reply_markup=markup)
     count_users += 1
     bot.register_next_step_handler(m, get_quest_type)
-    return
 
 @bot.message_handler(content_types=["text"])
 def admin_panel_open(message):
@@ -147,7 +126,6 @@ def admin_panel_open(message):
     if us_id not in admins:
         bot.send_message(message.chat.id, 'Данная функция доступна только администраторам. Выберите другой режим.')
         redirect(message)
-        return
     else:
         markup = types.ReplyKeyboardMarkup(resize_keyboard=False)
         btn1 = types.KeyboardButton("Ответить на обращение")
@@ -158,7 +136,6 @@ def admin_panel_open(message):
         markup.add(btn3)
         bot.send_message(message.chat.id, 'Выберите нужную функцию при помощи кнопок', reply_markup=markup)
         bot.register_next_step_handler(message, admin_panel)
-        return
 
 @bot.message_handler(content_types=["text"])
 def admin_panel(message):
@@ -171,13 +148,10 @@ def admin_panel(message):
     markup.add(btn3)
     if message.text == 'Ответить на обращение':
         reply_id1(message)
-        return
     elif message.text == 'Системная информация':
        system_info(message)
-       return
     else:
         redirect(message)
-        return
 
 @bot.message_handler(content_types=["text"])
 def reply_id1(message):
@@ -187,8 +161,6 @@ def reply_id1(message):
     markup.add(btn1)
     bot.send_message(message.chat.id, 'Отправьте ответ в формате "ID <пробел> текст" или вернитесь по кнопке "Назад"', reply_markup=markup)
     bot.register_next_step_handler(message, reply_id2)
-    return
-
 
 @bot.message_handler(content_types=["text"])
 def reply_id2(message):
@@ -205,30 +177,25 @@ def reply_id2(message):
             bot.send_message(chat_id=user_id, text=answer_text)
             bot.send_message(message.chat.id, 'Ответ отправлен!')
             admin_panel_open(message)
-            return
         except:
             bot.send_message(message.chat.id, 'Ошибка при отправке сообщения или неверный формат записи')
             admin_panel_open(message)
-            return
 
 
 
 @bot.message_handler(content_types=["text"])
 def system_info(message):
-    global CLIENT_DATA, start_time_data, group_id
-    client_data = ''.join(CLIENT_DATA)
-    print(client_data)
+    global RESERVE, start_time_data, group_id
+    client_data = '\n'.join(RESERVE)
     sys_info = 'Дата запуска: ' + start_time_data + '\n' + 'ID группы Телеграм: ' + str(group_id) + '\n' + 'CLIENT_DATA list\n' + client_data
     bot.send_message(message.chat.id, sys_info)
     admin_panel_open(message)
-    return
-
 
 @bot.message_handler(content_types=["text"])
 def history(message):
     us_id = message.from_user.id
     print(us_id)
-    f = open('C:/Users/alesh/OneDrive/Desktop/data.txt', encoding='utf-8')
+    f = open('/home/aleshus2007eu/data.txt', encoding='utf-8')
     msgs = f.readlines()
     res = []
     for i in msgs:
@@ -237,7 +204,6 @@ def history(message):
     if not res:
         bot.send_message(message.chat.id, 'История пуста.')
         redirect(message)
-        return
     else:
         reply = []
         for i in res:
@@ -250,69 +216,52 @@ def history(message):
             reply.append(joined)
         bot.send_message(message.chat.id, '\n############################\n'.join(reply))
         redirect(message)
-        return
 
 
-@bot.message_handler(content_types=["text"])
 def redirect(message):
-    markup = types.ReplyKeyboardMarkup(resize_keyboard=False)
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=False, one_time_keyboard=True)
     btn1 = types.KeyboardButton("Наш веб-сайт")
     btn2 = types.KeyboardButton("Оплата/погашение задолжности")
     btn3 = types.KeyboardButton("Вопрос технического или иного характера")
     btn4 = types.KeyboardButton("Вопросы/предложения по работе этого Телеграм-бота")
-    # btn5 = types.KeyboardButton("История запросов")
-    btn6 = types.KeyboardButton("Админ-панель")
+    btn5 = types.KeyboardButton("Админ-панель")
     markup.add(btn1)
     markup.add(btn2)
     markup.add(btn3)
     markup.add(btn4)
-    # markup.add(btn5)
-    markup.add(btn6)
+    markup.add(btn5)
     bot.send_message(message.chat.id, 'Выберите характер интересующего Вас вопроса, нажав на соответствующую кнопку.', reply_markup=markup)
     bot.register_next_step_handler(message, get_quest_type)
-    markup = types.ReplyKeyboardRemove()
-    return
-
 
 @bot.message_handler(content_types=["text"])
 def get_quest_type(message):
-    markup = types.ReplyKeyboardMarkup(resize_keyboard=False)
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=False, one_time_keyboard=True)
     btn1 = types.KeyboardButton("Наш веб-сайт")
     btn2 = types.KeyboardButton("Оплата/погашение задолжности")
     btn3 = types.KeyboardButton("Вопрос технического или иного характера")
     btn4 = types.KeyboardButton("Вопросы/предложения по работе этого Телеграм-бота")
-    # btn5 = types.KeyboardButton("История запросов")
-    btn6 = types.KeyboardButton("Админ-панель")
+    btn5 = types.KeyboardButton("Админ-панель")
     markup.add(btn1)
     markup.add(btn2)
     markup.add(btn3)
     markup.add(btn4)
-    # markup.add(btn5)
-    markup.add(btn6)
+    markup.add(btn5)
     if message.text == 'Оплата/погашение задолжности':
         bot.send_message(message.chat.id, 'По данному вопросу, пожалуйста обратитесь напрямую в Диспетчерскую по тел. +7(495)596-16-03, эл.почта 5961603@mail.ru' + '\n' +
         'ВНИМАНИЕ! Если вы были заблокированы в приложении Спутник "Наш Дом", скорее всего, у Вас есть задолженность по оплате наших услуг. Обратитесь в Диспетчерскую.', reply_markup=markup)
         redirect(message)
-        return
     elif message.text == 'Вопрос технического или иного характера':
         bot.send_message(message.chat.id, 'Ответьте на все вопросы, мы постараемся помочь Вам.')
         get_name1(message)
-        return
     elif message.text == 'Наш веб-сайт':
         site(message)
-        return
     elif message.text == 'Вопросы/предложения по работе этого Телеграм-бота':
         questions_tg_bot1(message)
-        return
-    # elif message.text == 'История запросов':
-        # history(message)
     elif message.text == 'Админ-панель':
         admin_panel_open(message)
-        return
     else:
         bot.send_message(message.chat.id, 'Ошибка! Повторите попытку.')
         redirect(message)
-        return
 
 @bot.message_handler(content_types=["text"])
 def get_name1(message):
@@ -320,25 +269,21 @@ def get_name1(message):
     bot.send_message(message.chat.id, 'Представьтесь (ФИО), пожалуйста. При желании, остановить диалог по данному'
                                       ' вопросу можно будет по кнопке "Очистить форму".', reply_markup=markup)
     bot.register_next_step_handler(message, get_name2_get_contacts1)
-    return
 
 
 @bot.message_handler(content_types=["text"])
 def get_name2_get_contacts1(message):
     global CLIENT_DATA
-    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
     btn1 = types.KeyboardButton("Очистить форму")
     markup.add(btn1)
     if message.text == 'Очистить форму':
         CLIENT_DATA = [i for i in CLIENT_DATA if str(message.from_user.id) not in i]
         redirect(message)
-        return
     elif message.text == '/check':
         check_status(message)
-        return
     elif message.text == '/admin':
         admin(message)
-        return
     else:
         CLIENT_DATA.append(replace_decode(message.text) + '#' + str(message.from_user.id) + '#' + 'na')
 
@@ -346,91 +291,82 @@ def get_name2_get_contacts1(message):
                                           'В случае её недостоверности обратная связь будет невозможна.', reply_markup=markup)
 
         bot.register_next_step_handler(message, get_contacts2_get_adress1)
-        return
 
 @bot.message_handler(content_types=["text"])
 def get_contacts2_get_adress1(message):
     global CLIENT_DATA
-    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
     btn1 = types.KeyboardButton("Очистить форму")
     markup.add(btn1)
     if message.text == 'Очистить форму':
         CLIENT_DATA = [i for i in CLIENT_DATA if str(message.from_user.id) not in i]
         redirect(message)
-        return
     else:
         CLIENT_DATA.append(replace_decode(message.text) + '#' + str(message.from_user.id) + '#' + 'co')
         bot.send_message(message.chat.id, 'Укажите улицу, номер дома и подъезд.', reply_markup=markup)
         bot.register_next_step_handler(message, get_adress2_get_date_time_problem1)
-        return
 
 @bot.message_handler(content_types=["text"])
 def get_adress2_get_date_time_problem1(message):
     global CLIENT_DATA
-    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
     btn1 = types.KeyboardButton("Очистить форму")
     markup.add(btn1)
     if message.text == 'Очистить форму':
         CLIENT_DATA = [i for i in CLIENT_DATA if str(message.from_user.id) not in i]
         redirect(message)
-        return
     else:
         CLIENT_DATA.append(replace_decode(message.text) + '#' + str(message.from_user.id) + '#' + 'ad')
-        bot.send_message(message.chat.id, 'Пожалуйста, укажите номер квартиры, это очень важно для нас.')
+        bot.send_message(message.chat.id, 'Пожалуйста, укажите номер квартиры, это очень важно для нас.', reply_markup=markup)
         bot.register_next_step_handler(message, get_flat)
-        return
 
 @bot.message_handler(content_types=["text"])
 def get_flat(message):
     global CLIENT_DATA
-    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
     btn1 = types.KeyboardButton("Очистить форму")
     markup.add(btn1)
     if message.text == 'Очистить форму':
         CLIENT_DATA = [i for i in CLIENT_DATA if str(message.from_user.id) not in i]
         redirect(message)
-        return
     else:
         CLIENT_DATA.append(replace_decode(message.text) + '#' + str(message.from_user.id) + '#' + 'fl')
-        bot.send_message(message.chat.id, 'Пожалуйста, подробно опишите Ваш вопрос.', reply_markup=markup)
+        bot.send_message(message.chat.id, 'Пожалуйста, подробно опишите Ваш вопрос. После этого бот автоматически '
+                                          'отправит Ваше обращение нам.', reply_markup=markup)
         us_id = message.from_user.id
         bot.register_next_step_handler(message, get_problem)
-        return
 
 @bot.message_handler(content_types=["text"])
 def get_problem(message):
     global CLIENT_DATA
-    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
     btn1 = types.KeyboardButton("Очистить форму")
     markup.add(btn1)
     if message.text == 'Очистить форму':
         CLIENT_DATA = [i for i in CLIENT_DATA if str(message.from_user.id) not in i]
         redirect(message)
-        return
     else:
         CLIENT_DATA.append(replace_decode(message.text) + '#' + str(message.from_user.id) + '#' + 'qu')
         get_message2(message)
-        return
 
 @bot.message_handler(content_types=["text"])
 def get_message2(message):
     create_text(message)
-    return
 
-@bot.message_handler(content_types=["text"])
-def send_q(message):
-    bot.send_message(message.chat.id, 'Текст Вашего обращения, которое будет отправлено в компанию: ' + '\n' +
-    'ФИО: ' + ' '.join([i.split('#')[0] for i in CLIENT_DATA if str(message.from_user.id) in i and 'na' in i.split('#')]) + '\n' +
-    'Контактная информация: ' + ' '.join([i.split('#')[0] for i in CLIENT_DATA if str(message.from_user.id) in i and 'co' in i.split('#')]) + '\n' +
-    'Адрес: ' + ' '.join([i.split('#')[0] for i in CLIENT_DATA if str(message.from_user.id) in i and 'ad' in i.split('#')]) + '\n' +
-    'Вопрос: ' + ' '.join([i.split('#')[0] for i in CLIENT_DATA if str(message.from_user.id) in i and 'qu' in i.split('#')]))
-    bot.register_next_step_handler(message, send_qq)
-    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    btn1 = types.KeyboardButton("Да")
-    btn2 = types.KeyboardButton("Нет, полностью удалить форму.")
-    markup.add(btn1, btn2)
-    bot.send_message(message.chat.id, 'Подтвердить отправку обращения?', reply_markup=markup)
-    return
+# @bot.message_handler(content_types=["text"])
+# def send_q(message):
+#     bot.send_message(message.chat.id, 'Текст Вашего обращения, которое будет отправлено в компанию: ' + '\n' +
+#     'ФИО: ' + ' '.join([i.split('#')[0] for i in CLIENT_DATA if str(message.from_user.id) in i and 'na' in i.split('#')]) + '\n' +
+#     'Контактная информация: ' + ' '.join([i.split('#')[0] for i in CLIENT_DATA if str(message.from_user.id) in i and 'co' in i.split('#')]) + '\n' +
+#     'Адрес: ' + ' '.join([i.split('#')[0] for i in CLIENT_DATA if str(message.from_user.id) in i and 'ad' in i.split('#')]) + '\n' +
+#     'Вопрос: ' + ' '.join([i.split('#')[0] for i in CLIENT_DATA if str(message.from_user.id) in i and 'qu' in i.split('#')]))
+#     bot.register_next_step_handler(message, send_qq)
+#     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+#     btn1 = types.KeyboardButton("Да")
+#     btn2 = types.KeyboardButton("Нет, полностью удалить форму.")
+#     markup.add(btn1, btn2)
+#     bot.send_message(message.chat.id, 'Подтвердить отправку обращения?', reply_markup=markup)
+#     return
 
 # @bot.message_handler(content_types=["text"])
 # def send_qq(message):
@@ -442,7 +378,7 @@ def send_q(message):
 
 @bot.message_handler(content_types=["text"])
 def create_text(message):
-    global CLIENT_DATA, counter, group_id
+    global CLIENT_DATA, RESERVE, counter, group_id
     time = [int(i) for i in str(datetime.today())[11:-10].split(':')]
     time[0] += 3
     time = (':'.join([str(i) for i in time]))
@@ -451,12 +387,6 @@ def create_text(message):
     user_nickname = message.from_user.username
     user_id = message.from_user.id
     print(CLIENT_DATA)
-
-    # with open('C:/Users/alesh/OneDrive/Desktop/counter.txt', 'w', encoding='utf-8') as f:
-    #     counter = int(counter)
-    #     counter += 1
-    #     f.write(str(counter))
-    #     f.close()
 
     bot.send_message(group_id, '*Новая заявка:  ' + '\n' 'ID запроса: ' + str(counter) + '\n' + '*Никнейм пользователя: ' + str(user_nickname) + '\n' + '*ID: '
                      + str(user_id) + '\n' +
@@ -472,7 +402,7 @@ def create_text(message):
         i.split('#')[0] for i in CLIENT_DATA if str(message.from_user.id) in i and 'qu' in i.split('#')))
 
 
-    for_file = str(counter) + '&' + str(user_nickname) + '&' + str(user_id) + '&' + str(date) + '&' + str(time) + '&' + ''.join(
+    for_file = str(user_nickname) + '&' + str(user_id) + '&' + str(date) + '&' + str(time) + '&' + ''.join(
         i.split('#')[0] for i in CLIENT_DATA if
         str(message.from_user.id) in i and 'na' in i.split('#')) + '&' + ' '.join(
         i.split('#')[0] for i in CLIENT_DATA if
@@ -483,23 +413,22 @@ def create_text(message):
                                                      '#')) + '&' + ' '.join(
         i.split('#')[0] for i in CLIENT_DATA if str(message.from_user.id) in i and 'qu' in i.split('#'))
 
-    # with open('C:/Users/alesh/OneDrive/Desktop/data.txt', 'a+', encoding='utf-8') as f:
-    #     f.write(for_file + '\n')
-    #     f.close()
+    with open('/home/aleshus2007eu/data.txt', 'a+', encoding='utf-8') as f:
+        f.write(for_file + '\n')
+        f.close()
 
+    RESERVE += CLIENT_DATA
     CLIENT_DATA = [i for i in CLIENT_DATA if str(user_id) not in i]
     print(user_id)
     print(message.from_user.username)
     markup = types.ReplyKeyboardRemove()
-    bot.send_message(message.chat.id, 'Ваша заявка отправлена! Благодарим за обращение!', reply_markup=markup)
+    bot.send_message(message.chat.id, 'Ваше сообшение успешно отправлено! Благодарим за обращение!', reply_markup=markup)
     renew(message)
-    return
 
 
 @bot.message_handler(content_types=["text"])
 def renew(message):
     bot.send_message(message.chat.id, 'Для перехода в меню /start ')
-    return
 
 if __name__ == "__main__":
     bot.infinity_polling()
