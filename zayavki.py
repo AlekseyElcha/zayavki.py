@@ -19,17 +19,12 @@ pressed_buttons = set()
 group_id = -1002119559432  # MAIN GROUP
 start_time_data = (str(datetime.today())[:-7] + ' UTC')
 print('Started')
-symbols = ['_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!', '₽', '$', '#', '%']
+symbols = ['_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!', '₽', '$', '#', '%', '_', '*', '[', ']', '(', ')', '~', '`', '>',
+'#', '+', '-', '=', '|', '{', '}', '.', '!']
 def replace_decode(s):
-    try:
-        t = [i for i in s]
-        for i in t:
-            if i in symbols:
-                i = i.replace(i, '-')
-        return ''.join(t)
-    except:
-        x = 'Неподдерживаемый символ'
-        return x
+    global symbols
+    t = [i for i in s if i not in symbols]
+    return ''.join(t)
 
 @bot.message_handler(commands=['answer'])
 def send_answer(message):
@@ -63,7 +58,17 @@ def site(message):
     button_wa = types.InlineKeyboardButton("Открыть здесь", web_app=web_info)
     button_web = types.InlineKeyboardButton("Открыть в Браузере", url='https://domofon-servis-odi.ru')
     markup.add(button_wa, button_web)
-    bot.send_message(message.chat.id, 'Где открыть наш обновлённый сайт? https://domofon-servis-odi.ru', reply_markup=markup)
+    bot.send_message(message.chat.id, 'ВНИМАНИЕ!!!\n'
+                                      '   - За последнее время были зафиксированы случаи мошенничества на обслуживаемых нами адресах!\n'
+            '   - Если Вы получили сообщение/звонок о некой замене домофона и необходимости заказать и оплатить новые ключи - это могут быть мошенники!\n'
+            '   - Всегда проверяйте информацию по доверенным источникам - по контактам, указанным в этом Телеграм-боте и на нашем сайте\n'
+                                      '    Будьте бдительны!\n'
+                                      '----------------------------------------------------------------------\n'
+                                      '* Тел. +7 (495) 596-16-03\n'
+                                      '* E-mail: 5961603@mail.ru\n'
+                                      '* Адрес: г. Одинцово, ул. Маршала Жукова д.34 п.3\n'
+                                      '* Время работы: пн-пт 9:00-18:00, перерыв 13:00-14:00\n'
+                                      '* Наш обновлённый сайт: https://domofon-servis-odi.ru', reply_markup=markup)
     redirect(message)
 
 
@@ -101,16 +106,16 @@ def questions_tg_bot2(message):
 def start(m, res=False):
     global count_users
     markup = types.ReplyKeyboardMarkup(resize_keyboard=False)
-    btn1 = types.KeyboardButton("Наш веб-сайт")
-    btn2 = types.KeyboardButton("Оплата/погашение задолжности")
+    btn1 = types.KeyboardButton("Полезная информация о нас")
+    btn2 = types.KeyboardButton("Оплата/погашение задолженности")
     btn3 = types.KeyboardButton("Вопрос технического или иного характера")
     btn4 = types.KeyboardButton("Вопросы/предложения по работе этого Телеграм-бота")
-    # btn5 = types.KeyboardButton("История запросов")
+    btn5 = types.KeyboardButton("Админ-панель")
     markup.add(btn1)
     markup.add(btn2)
     markup.add(btn3)
     markup.add(btn4)
-    # markup.add(btn5)
+    markup.add(btn5)
     bot.send_message(m.chat.id, 'Приветствуем Вас в нашем ТГ-боте!' + '\n' + '#########################' + '\n' + '\n' + 'Это обновленная версия нашего бота, в случае некорректной работы, пожалуйста, '
      'пишите на эл.почту aleshus2007@gmail.com, это поможет нам оперативно найти и пофиксить баги.' + '\n' +
         '#########################' + '\n' + '\n' +'Выберите характер интересующего Вас вопроса, '
@@ -220,8 +225,8 @@ def history(message):
 
 def redirect(message):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=False, one_time_keyboard=True)
-    btn1 = types.KeyboardButton("Наш веб-сайт")
-    btn2 = types.KeyboardButton("Оплата/погашение задолжности")
+    btn1 = types.KeyboardButton("Полезная информация о нас")
+    btn2 = types.KeyboardButton("Оплата/погашение задолженности")
     btn3 = types.KeyboardButton("Вопрос технического или иного характера")
     btn4 = types.KeyboardButton("Вопросы/предложения по работе этого Телеграм-бота")
     btn5 = types.KeyboardButton("Админ-панель")
@@ -236,8 +241,8 @@ def redirect(message):
 @bot.message_handler(content_types=["text"])
 def get_quest_type(message):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=False, one_time_keyboard=True)
-    btn1 = types.KeyboardButton("Наш веб-сайт")
-    btn2 = types.KeyboardButton("Оплата/погашение задолжности")
+    btn1 = types.KeyboardButton("Полезная информация о нас")
+    btn2 = types.KeyboardButton("Оплата/погашение задолженности")
     btn3 = types.KeyboardButton("Вопрос технического или иного характера")
     btn4 = types.KeyboardButton("Вопросы/предложения по работе этого Телеграм-бота")
     btn5 = types.KeyboardButton("Админ-панель")
@@ -246,14 +251,14 @@ def get_quest_type(message):
     markup.add(btn3)
     markup.add(btn4)
     markup.add(btn5)
-    if message.text == 'Оплата/погашение задолжности':
+    if message.text == 'Оплата/погашение задолженности':
         bot.send_message(message.chat.id, 'По данному вопросу, пожалуйста обратитесь напрямую в Диспетчерскую по тел. +7(495)596-16-03 пн-пт 9:00-18:00, эл.почта 5961603@mail.ru' + '\n' +
         'ВНИМАНИЕ! Если вы были заблокированы в приложении Спутник "Наш Дом", скорее всего, у Вас есть задолженность по оплате наших услуг. Обратитесь в Диспетчерскую.', reply_markup=markup)
         redirect(message)
     elif message.text == 'Вопрос технического или иного характера':
         bot.send_message(message.chat.id, 'Ответьте на все вопросы, мы постараемся помочь Вам.')
         get_name1(message)
-    elif message.text == 'Наш веб-сайт':
+    elif message.text == 'Полезная информация о нас':
         site(message)
     elif message.text == 'Вопросы/предложения по работе этого Телеграм-бота':
         questions_tg_bot1(message)
