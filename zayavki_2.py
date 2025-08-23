@@ -7,10 +7,9 @@ from datetime import *
 import os
 from sys import *
 from telebot.types import InlineKeyboardMarkup
-from random import randrange
-bot = TeleBot('7355802592:AAHQwrC1DoNHEOj93jQngTuX1MoWp_kSwWs') # TG TEST VERSION
-# bot = TeleBot('6417715356:AAE3fSAIO_M6_TN8lX2kYb1V6DXDCw_z1Dk') # TG MAIN VERSION
-file_admins = open(r'C:\Users\alesh\OneDrive\Рабочий стол\botTG\home\aleshus2007\admins.txt')
+bot = telebot.TeleBot('7355802592:AAHQwrC1DoNHEOj93jQngTuX1MoWp_kSwWs', skip_pending=True)  # TG TEST
+# bot = telebot.TeleBot('6417715356:AAE3fSAIO_M6_TN8lX2kYb1V6DXDCw_z1Dk', skip_pending=True)  # TG MAIN
+file_admins = open(r'C:\Users\alesh\OneDrive\Desktop\botTG\admins.txt')
 # file_admins = open('/home/aleshus2007eu/admins.txt')
 admins = [int(i) for i in file_admins]
 count_users = 0
@@ -23,17 +22,8 @@ start_time_data = (str(datetime.today())[:-7] + ' UTC')
 print('Started')
 symbols = ['_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!', '₽', '$', '#', '%']
 def replace_decode(s):
-    try:
-        t = [i for i in s]
-        for i in t:
-            if i in symbols:
-                i = i.replace(i, '-')
-        return ''.join(t)
-    except:
-        x = 'Неподдерживаемый символ'
-        return x
-
-
+    t = [i for i in s if i not in symbols]
+    return ''.join(t)
 
 @bot.message_handler(content_types=['photo'])
 def photo_assign(message):
@@ -173,7 +163,7 @@ def check_status(message):
 def site(message):
     markup = types.InlineKeyboardMarkup()
     web_info = types.WebAppInfo('https://domofon-servis-odi.ru')
-    button_wa = types.InlineKeyboardButton("Открыть здесь", web_app=web_info)
+    button_wa = types.InlineKeyboardButton("Открыть в ТГ", web_app=web_info)
     button_web = types.InlineKeyboardButton("Открыть в Браузере", url='https://domofon-servis-odi.ru')
     markup.add(button_wa, button_web)
     bot.send_message(message.chat.id, 'ВНИМАНИЕ!!!\n'
@@ -186,7 +176,7 @@ def site(message):
                                       '* E-mail: 5961603@mail.ru\n'
                                       '* Адрес: г. Одинцово, ул. Маршала Жукова д.34 п.3\n'
                                       '* Время работы: пн-пт 9:00-18:00, перерыв 13:00-14:00\n'
-                                      '* Наш обновлённый сайт: https://domofon-servis-odi.ru', reply_markup=markup)
+                                      '* Наш сайт: https://domofon-servis-odi.ru', reply_markup=markup)
     redirect(message)
 
 
@@ -296,33 +286,14 @@ def admin_panel_open(message):
         bot.send_message(message.chat.id, 'Выберите нужную функцию при помощи кнопок', reply_markup=markup)
         bot.register_next_step_handler(message, admin_panel)
 
-@bot.message_handler(content_types=["text"])
-def send_file1(message):
-    global group_id
-    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    btn1 = types.KeyboardButton("Назад")
-    markup.add(btn1)
-    bot.send_message(message.chat.id, 'Введите ID или вернитесь по кнопке "Назад"', reply_markup=markup)
-    bot.register_next_step_handler(message, send_file2)
+@bot.message_handler(content_types=['text'])
+def send_file_1(message):
+    bot.send_message(message.chat.id, 'Введите ID.')
+    bot.register_next_step_handler(message, send_file_2)
 
-@bot.message_handler(content_types=["text"])
-def send_file2(message):
-    global user_id_answ
-    try:
-        user_id_answ = int(message.text)
-    except:
-        bot.send_message(message.chat.id, 'Ошибка!')
-        redirect(message)
-    if user_id_answ == 'Назад':
-        admin_panel_open(message)
-        return
-    else:
-        bot.register_next_step_handler(message, send_file3)
-
-@bot.message_handler(content_types=["text"])
-def send_file3(message):
-    global user_id_answ
-    print(user_id_answ)
+@bot.message_handler(content_types=['text'])
+def send_file_2(message):
+    user_id_answ = message.caption
     file_id = message.document.file_id
     bot.send_document(user_id_answ, file_id)
     bot.send_message(message.chat.id, 'Файл отправлен!')
@@ -346,7 +317,7 @@ def admin_panel(message):
     elif message.text == 'Системная информация':
        system_info(message)
     elif message.text == 'Отправить файл':
-        send_file1(message)
+        send_file_1(message)
     else:
         redirect(message)
 
@@ -724,7 +695,7 @@ def create_text(message):
                                                      '#')) + '&' + ' '.join(
         i.split('#')[0] for i in CLIENT_DATA if str(message.from_user.id) in i and 'qu' in i.split('#'))
 
-    with open(r'C:\Users\alesh\OneDrive\Рабочий стол\botTG\home\aleshus2007\data.txt', 'a+', encoding='utf-8') as f:
+    with open(r'C:\Users\alesh\OneDrive\Desktop\botTG\data.txt', 'a+', encoding='utf-8') as f:
         f.write(for_file + '\n')
         f.close()
 
