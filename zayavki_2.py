@@ -7,17 +7,16 @@ from datetime import *
 import os
 from sys import *
 from telebot.types import InlineKeyboardMarkup
-bot = telebot.TeleBot('7355802592:AAHQwrC1DoNHEOj93jQngTuX1MoWp_kSwWs', skip_pending=True)  # TG TEST
-# bot = telebot.TeleBot('6417715356:AAE3fSAIO_M6_TN8lX2kYb1V6DXDCw_z1Dk', skip_pending=True)  # TG MAIN
-file_admins = open(r'C:\Users\alesh\OneDrive\Desktop\botTG\admins.txt')
-# file_admins = open('/home/aleshus2007eu/admins.txt')
+# bot = telebot.TeleBot('7355802592:AAHQwrC1DoNHEOj93jQngTuX1MoWp_kSwWs', skip_pending=True)  # TG TEST
+bot = telebot.TeleBot('6417715356:AAE3fSAIO_M6_TN8lX2kYb1V6DXDCw_z1Dk', skip_pending=True)  # TG MAIN
+file_admins = open('/home/aleshus2007eu/admins.txt')
 admins = [int(i) for i in file_admins]
 count_users = 0
 CLIENT_DATA = []
 RESERVE = []
-pressed_buttons = set()
-group_id = -4253143897  # TEST GROUP
-# group_id = -1002119559432  # MAIN GROUP
+PRESSED_BUTTONS = []
+# group_id = -4253143897  # TEST GROUP
+group_id = -1002119559432  # MAIN GROUP
 start_time_data = (str(datetime.today())[:-7] + ' UTC')
 print('Started')
 symbols = ['_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!', '₽', '$', '#', '%']
@@ -355,7 +354,10 @@ def reply_id2(message):
 def system_info(message):
     global RESERVE, start_time_data, group_id
     client_data = '\n'.join(RESERVE)
-    sys_info = 'Дата запуска: ' + start_time_data + '\n' + 'ID группы Телеграм: ' + str(group_id) + '\n' + 'CLIENT_DATA list\n' + client_data
+    pressed_buttons = '\n'.join(PRESSED_BUTTONS)
+    sys_info = ('Дата запуска: ' + start_time_data + '\n'
+                + 'ID группы Телеграм: ' + str(group_id) + '\n'  + 'CLIENT_DATA list\n'
+                + client_data + '\n' + 'PRESSED_BUTTONS\n' + pressed_buttons)
     bot.send_message(message.chat.id, sys_info)
     admin_panel_open(message)
 
@@ -414,18 +416,24 @@ def get_quest_type(message):
     markup.add(btn3)
     markup.add(btn4)
     markup.add(btn5)
+    user_id = str(message.from_user.id)
     if message.text == 'Оплата/погашение задолженности':
+        PRESSED_BUTTONS.append(user_id + '#oplata')
         bot.send_message(message.chat.id, 'По данному вопросу, пожалуйста обратитесь напрямую в Диспетчерскую по тел. +7(495)596-16-03 пн-пт 9:00-18:00, эл.почта 5961603@mail.ru' + '\n' +
         'ВНИМАНИЕ! Если вы были заблокированы в приложении Спутник "Наш Дом", скорее всего, у Вас есть задолженность по оплате наших услуг. Обратитесь в Диспетчерскую.', reply_markup=markup)
         redirect(message)
     elif message.text == 'Вопрос технического или иного характера':
         bot.send_message(message.chat.id, 'Ответьте на все вопросы, мы постараемся помочь Вам.')
+        PRESSED_BUTTONS.append(user_id + '#tech')
         get_name1(message)
     elif message.text == 'Полезная информация о нас':
+        PRESSED_BUTTONS.append(user_id + '#info')
         site(message)
     elif message.text == 'Вопросы/предложения по работе этого Телеграм-бота':
+        PRESSED_BUTTONS.append(user_id + '#tgquest')
         questions_tg_bot1(message)
     elif message.text == 'Админ-панель':
+        PRESSED_BUTTONS.append(user_id + '#admin')
         admin_panel_open(message)
     else:
         bot.send_message(message.chat.id, 'Ошибка! Повторите попытку.')
@@ -695,7 +703,7 @@ def create_text(message):
                                                      '#')) + '&' + ' '.join(
         i.split('#')[0] for i in CLIENT_DATA if str(message.from_user.id) in i and 'qu' in i.split('#'))
 
-    with open(r'C:\Users\alesh\OneDrive\Desktop\botTG\data.txt', 'a+', encoding='utf-8') as f:
+    with open(r'/home/aleshus2007eu/data.txt', 'a+', encoding='utf-8') as f:
         f.write(for_file + '\n')
         f.close()
 
