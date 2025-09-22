@@ -7,8 +7,8 @@ from datetime import *
 import os
 from sys import *
 from telebot.types import InlineKeyboardMarkup
-# bot = telebot.TeleBot('7355802592:AAHQwrC1DoNHEOj93jQngTuX1MoWp_kSwWs', skip_pending=True)  # TG TEST
-bot = telebot.TeleBot('6417715356:AAE3fSAIO_M6_TN8lX2kYb1V6DXDCw_z1Dk', skip_pending=True)  # TG MAIN
+# bot = telebot.TeleBot('token1', skip_pending=True)  # TG TEST
+bot = telebot.TeleBot('token2', skip_pending=True)  # TG MAIN
 file_admins = open('/home/aleshus2007eu/admins.txt')
 admins = [int(i) for i in file_admins]
 count_users = 0
