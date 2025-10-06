@@ -9,14 +9,15 @@ from sys import *
 from telebot.types import InlineKeyboardMarkup
 # bot = telebot.TeleBot('', skip_pending=True)  # TG TEST
 bot = telebot.TeleBot('', skip_pending=True)  # TG MAIN
+# file_admins = [5696529637, 1953148476]
 file_admins = open('/home/aleshus2007eu/admins.txt')
 admins = [int(i) for i in file_admins]
 count_users = 0
 CLIENT_DATA = []
 RESERVE = []
 PRESSED_BUTTONS = []
-group_id = -4253143897  # TEST GROUP
-# group_id = -1002119559432  # MAIN GROUP
+# group_id = -4253143897  # TEST GROUP
+group_id = -1002119559432  # MAIN GROUP
 start_time_data = (str(datetime.today())[:-7] + ' UTC')
 print('Started')
 symbols = ['_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!', '₽', '$', '#', '%']
@@ -473,6 +474,8 @@ def get_name2_get_contacts1(message):
     else:
         if message.text == 'Очистить форму':
             CLIENT_DATA = [i for i in CLIENT_DATA if str(message.from_user.id) not in i]
+            user_id = str(message.from_user.id)
+            PRESSED_BUTTONS.append(user_id + '#clear')
             redirect(message)
         elif message.text == '/check':
             check_status(message)
@@ -520,6 +523,8 @@ def get_contacts2_get_adress1(message):
     else:
         if message.text == 'Очистить форму':
             CLIENT_DATA = [i for i in CLIENT_DATA if str(message.from_user.id) not in i]
+            user_id = str(message.from_user.id)
+            PRESSED_BUTTONS.append(user_id + '#clear')
             redirect(message)
         else:
             CLIENT_DATA.append(replace_decode(message.text) + '#' + str(message.from_user.id) + '#' + 'co')
@@ -554,6 +559,8 @@ def get_adress2_get_date_time_problem1(message):
     else:
         if message.text == 'Очистить форму':
             CLIENT_DATA = [i for i in CLIENT_DATA if str(message.from_user.id) not in i]
+            user_id = str(message.from_user.id)
+            PRESSED_BUTTONS.append(user_id + '#clear')
             redirect(message)
         else:
             CLIENT_DATA.append(replace_decode(message.text) + '#' + str(message.from_user.id) + '#' + 'ad')
@@ -592,6 +599,8 @@ def get_flat(message):
     else:
         if message.text == 'Очистить форму':
             CLIENT_DATA = [i for i in CLIENT_DATA if str(message.from_user.id) not in i]
+            user_id = str(message.from_user.id)
+            PRESSED_BUTTONS.append(user_id + '#clear')
             redirect(message)
         else:
             CLIENT_DATA.append(replace_decode(message.text) + '#' + str(message.from_user.id) + '#' + 'fl')
@@ -631,6 +640,8 @@ def get_problem(message):
     else:
         if message.text == 'Очистить форму':
             CLIENT_DATA = [i for i in CLIENT_DATA if str(message.from_user.id) not in i]
+            user_id = str(message.from_user.id)
+            PRESSED_BUTTONS.append(user_id + '#clear')
             redirect(message)
         else:
             CLIENT_DATA.append(replace_decode(message.text) + '#' + str(message.from_user.id) + '#' + 'qu')
