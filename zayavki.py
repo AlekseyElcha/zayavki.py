@@ -7,8 +7,8 @@ from datetime import *
 import os
 from sys import *
 from telebot.types import InlineKeyboardMarkup
-# bot = telebot.TeleBot('', skip_pending=True)  # TG TEST
-bot = telebot.TeleBot('', skip_pending=True)  # TG MAIN
+# bot = telebot.TeleBot('7355802592:AAHQwrC1DoNHEOj93jQngTuX1MoWp_kSwWs', skip_pending=True)  # TG TEST
+bot = telebot.TeleBot('6417715356:AAE3fSAIO_M6_TN8lX2kYb1V6DXDCw_z1Dk', skip_pending=True)  # TG MAIN
 # file_admins = [5696529637, 1953148476]
 file_admins = open('/home/aleshus2007eu/admins.txt')
 admins = [int(i) for i in file_admins]
@@ -419,22 +419,22 @@ def get_quest_type(message):
     markup.add(btn5)
     user_id = str(message.from_user.id)
     if message.text == 'Оплата/погашение задолженности':
-        PRESSED_BUTTONS.append(user_id + '#oplata')
+        PRESSED_BUTTONS.append(user_id + '#oplata ' + str(datetime.now())[:16] + ' UTC')
         bot.send_message(message.chat.id, 'По данному вопросу, пожалуйста обратитесь напрямую в Диспетчерскую по тел. +7(495)596-16-03 пн-пт 9:00-18:00, эл.почта 5961603@mail.ru' + '\n' +
         'ВНИМАНИЕ! Если вы были заблокированы в приложении Спутник "Наш Дом", скорее всего, у Вас есть задолженность по оплате наших услуг. Обратитесь в Диспетчерскую.', reply_markup=markup)
         redirect(message)
     elif message.text == 'Вопрос технического или иного характера':
         bot.send_message(message.chat.id, 'Ответьте на все вопросы, мы постараемся помочь Вам.')
-        PRESSED_BUTTONS.append(user_id + '#tech')
+        PRESSED_BUTTONS.append(user_id + '#tech'+ str(datetime.now())[:16] + ' UTC')
         get_name1(message)
     elif message.text == 'Полезная информация о нас':
-        PRESSED_BUTTONS.append(user_id + '#info')
+        PRESSED_BUTTONS.append(user_id + '#info '+ str(datetime.now())[:16] + ' UTC')
         site(message)
     elif message.text == 'Вопросы/предложения по работе этого Телеграм-бота':
-        PRESSED_BUTTONS.append(user_id + '#tgquest')
+        PRESSED_BUTTONS.append(user_id + '#tgquest '+ str(datetime.now())[:16] + ' UTC')
         questions_tg_bot1(message)
     elif message.text == 'Админ-панель':
-        PRESSED_BUTTONS.append(user_id + '#admin')
+        PRESSED_BUTTONS.append(user_id + '#admin ' + str(datetime.now())[:16] + ' UTC')
         admin_panel_open(message)
     else:
         bot.send_message(message.chat.id, 'Ошибка! Повторите попытку.')
@@ -475,7 +475,7 @@ def get_name2_get_contacts1(message):
         if message.text == 'Очистить форму':
             CLIENT_DATA = [i for i in CLIENT_DATA if str(message.from_user.id) not in i]
             user_id = str(message.from_user.id)
-            PRESSED_BUTTONS.append(user_id + '#clear')
+            PRESSED_BUTTONS.append(user_id + '#clear ' + str(datetime.now())[:16] + ' UTC')
             redirect(message)
         elif message.text == '/check':
             check_status(message)
@@ -524,7 +524,7 @@ def get_contacts2_get_adress1(message):
         if message.text == 'Очистить форму':
             CLIENT_DATA = [i for i in CLIENT_DATA if str(message.from_user.id) not in i]
             user_id = str(message.from_user.id)
-            PRESSED_BUTTONS.append(user_id + '#clear')
+            PRESSED_BUTTONS.append(user_id + '#clear ' + str(datetime.now())[:16] + ' UTC')
             redirect(message)
         else:
             CLIENT_DATA.append(replace_decode(message.text) + '#' + str(message.from_user.id) + '#' + 'co')
@@ -560,7 +560,7 @@ def get_adress2_get_date_time_problem1(message):
         if message.text == 'Очистить форму':
             CLIENT_DATA = [i for i in CLIENT_DATA if str(message.from_user.id) not in i]
             user_id = str(message.from_user.id)
-            PRESSED_BUTTONS.append(user_id + '#clear')
+            PRESSED_BUTTONS.append(user_id + '#clear ' + str(datetime.now())[:16] + ' UTC')
             redirect(message)
         else:
             CLIENT_DATA.append(replace_decode(message.text) + '#' + str(message.from_user.id) + '#' + 'ad')
@@ -600,7 +600,7 @@ def get_flat(message):
         if message.text == 'Очистить форму':
             CLIENT_DATA = [i for i in CLIENT_DATA if str(message.from_user.id) not in i]
             user_id = str(message.from_user.id)
-            PRESSED_BUTTONS.append(user_id + '#clear')
+            PRESSED_BUTTONS.append(user_id + '#clear ' + str(datetime.now())[:16] + ' UTC')
             redirect(message)
         else:
             CLIENT_DATA.append(replace_decode(message.text) + '#' + str(message.from_user.id) + '#' + 'fl')
@@ -641,7 +641,7 @@ def get_problem(message):
         if message.text == 'Очистить форму':
             CLIENT_DATA = [i for i in CLIENT_DATA if str(message.from_user.id) not in i]
             user_id = str(message.from_user.id)
-            PRESSED_BUTTONS.append(user_id + '#clear')
+            PRESSED_BUTTONS.append(user_id + '#clear ' + str(datetime.now())[:16] + ' UTC')
             redirect(message)
         else:
             CLIENT_DATA.append(replace_decode(message.text) + '#' + str(message.from_user.id) + '#' + 'qu')
@@ -732,4 +732,4 @@ def renew(message):
     bot.send_message(message.chat.id, 'Для перехода в меню /start ')
 
 if __name__ == "__main__":
-    bot.infinity_polling()
+    bot.infinity_polling(timeout=10, long_polling_timeout = 5)
